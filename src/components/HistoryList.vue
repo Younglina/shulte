@@ -20,19 +20,19 @@
         class="history-item"
         :class="`result-${record.result}`"
       >
-          <div class="history-item-left">
-            <div class="history-icon">
-              <i :class="`mdi ${getResultIcon(record.result)}`"></i>
-            </div>
-            <div class="history-info">
+        <div class="history-item-left">
+          <div class="history-icon">
+            <i :class="`mdi ${getResultIcon(record.result)}`"></i>
+          </div>
+          <div class="history-info">
             <div class="history-date">{{ formatDate(record.timestamp) }}</div>
-            <div class="history-mode">{{ record.mode }} 模式</div>
+            <div class="history-mode">{{ getModeDisplay(record) }}</div>
           </div>
         </div>
         <div class="history-item-right">
           <div class="history-time">{{ record.timeUsed.toFixed(2) }}s</div>
           <div v-if="record.result === 'success'" class="history-rating">
-            {{ getRating(record.timeUsed) }}
+            {{ getRating(record) }}
           </div>
         </div>
       </div>
@@ -79,15 +79,15 @@ const formatDate = (timestamp) => {
   if (diff < 60000) {
     return '刚刚'
   }
-  
+
   if (diff < 3600000) {
     return `${Math.floor(diff / 60000)} 分钟前`
   }
-  
+
   if (diff < 86400000) {
     return `${Math.floor(diff / 3600000)} 小时前`
   }
-  
+
   return date.toLocaleDateString('zh-CN', {
     month: '2-digit',
     day: '2-digit',
@@ -96,12 +96,35 @@ const formatDate = (timestamp) => {
   })
 }
 
-const getRating = (time) => {
-  if (time <= 8) return 'S'
-  if (time <= 15) return 'A'
-  if (time <= 20) return 'B'
-  if (time <= 25) return 'C'
-  return 'D'
+// 评级计算：支持不限时模式
+const getRating = (record) => {
+  if (record.result !== 'success') return '-'
+
+  const time = record.timeUsed
+
+  if (record.isUnlimited) {
+    // 不限时模式：更宽松的评级
+    if (time <= 15) return 'S'
+    if (time <= 25) return 'A'
+    if (time <= 35) return 'B'
+    if (time <= 50) return 'C'
+    return 'D'
+  } else {
+    // 限时模式：原有标准
+    if (time <= 8) return 'S'
+    if (time <= 15) return 'A'
+    if (time <= 20) return 'B'
+    if (time <= 25) return 'C'
+    return 'D'
+  }
+}
+
+// 模式显示文本
+const getModeDisplay = (record) => {
+  if (record.isUnlimited) {
+    return '不限时'
+  }
+  return `${record.mode}s 模式`
 }
 
 const handleClear = () => {

@@ -42,6 +42,12 @@ const modes = [
     title: '25 秒',
     desc: '挑战模式',
   },
+  {
+    value: 'unlimited',
+    icon: 'mdi-infinity',
+    title: '不限时',
+    desc: '自由练习',
+  },
 ]
 
 const selectMode = (mode) => {
@@ -66,9 +72,9 @@ const selectMode = (mode) => {
 
 .mode-options {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 16px;
-  max-width: 400px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  max-width: 500px;
   margin: 0 auto;
 }
 
@@ -135,24 +141,24 @@ const selectMode = (mode) => {
 // Mobile styles
 @media (max-width: 480px) {
   .mode-options {
-    grid-template-columns: 1fr;
-    gap: 12px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
   }
 
   .mode-button {
-    flex-direction: row;
-    padding: 16px 20px;
+    flex-direction: column;
+    padding: 12px 8px;
   }
 
   .mode-icon {
-    font-size: 1.5rem;
-    margin-bottom: 0;
-    margin-right: 16px;
+    font-size: 1.25rem;
+    margin-bottom: 4px;
+    margin-right: 0;
   }
 
   .mode-title {
-    font-size: 1rem;
-    margin-bottom: 0;
+    font-size: 0.75rem;
+    margin-bottom: 2px;
   }
 
   .mode-desc {

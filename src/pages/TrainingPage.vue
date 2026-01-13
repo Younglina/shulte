@@ -34,10 +34,10 @@
             </div>
             <div class="info-card">
               <div class="info-icon">
-                <i class="mdi mdi-timer-outline"></i>
+                <i :class="`mdi ${isUnlimitedMode ? 'mdi-infinity' : 'mdi-timer-outline'}`"></i>
               </div>
               <div class="info-title">时间限制</div>
-              <div class="info-text">{{ selectedMode }} 秒内完成</div>
+              <div class="info-text">{{ isUnlimitedMode ? '无限制' : selectedMode + ' 秒内完成' }}</div>
             </div>
           </div>
         </div>
@@ -46,18 +46,18 @@
       <template v-else-if="isPlaying">
         <div class="game-section">
           <TimerDisplay
-            :time="timeRemaining"
-            :total-time="parseInt(selectedMode)"
-            label="剩余时间"
+            :time="displayTime"
+            :total-time="parseInt(selectedMode) || 0"
+            :label="isUnlimitedMode ? '用时' : '剩余时间'"
           />
-          
+
           <GameGrid
             :numbers="gridNumbers"
             :is-playing="isPlaying"
             @click="handleGridClick"
           />
-          
-          <div class="progress-indicator">
+
+          <div class="progress-indicator" v-if="!isUnlimitedMode">
             <div class="progress-label">当前数字</div>
             <div class="progress-value">{{ nextNumber }}/25</div>
           </div>
@@ -165,7 +165,7 @@
             </div>
             <div class="stat-item">
               <div class="stat-label">模式</div>
-              <div class="stat-value">{{ currentRecord?.mode }}</div>
+              <div class="stat-value">{{ currentRecord?.modeDisplay || currentRecord?.mode }}</div>
             </div>
           </div>
           
@@ -201,7 +201,19 @@ import GameGrid from '../components/GameGrid.vue'
 import ResultCard from '../components/ResultCard.vue'
 
 const router = useRouter()
-const { selectedMode, gridNumbers, nextNumber, isPlaying, timeRemaining, isLowTime, startGame, handleClick, onTimeout } = useGameLogic()
+const {
+  selectedMode,
+  gridNumbers,
+  nextNumber,
+  isPlaying,
+  timeRemaining,
+  displayTime,
+  isUnlimitedMode,
+  isLowTime,
+  startGame,
+  handleClick,
+  onTimeout,
+} = useGameLogic()
 const { saveHistory } = useLocalStorage()
 
 const currentRecord = ref(null)

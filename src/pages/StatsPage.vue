@@ -8,41 +8,113 @@
     </div>
 
     <template v-else>
-      <div class="stats-summary">
-        <div class="summary-card">
-          <div class="summary-icon">
-            <i class="mdi mdi-bullseye"></i>
+      <!-- 总体统计 -->
+      <div class="stats-section">
+        <div class="section-title">总体统计</div>
+        <div class="stats-summary">
+          <div class="summary-card">
+            <div class="summary-icon">
+              <i class="mdi mdi-bullseye"></i>
+            </div>
+            <div class="summary-data">
+              <div class="summary-value">{{ stats.total }}</div>
+              <div class="summary-label">总次数</div>
+            </div>
           </div>
-          <div class="summary-data">
-            <div class="summary-value">{{ stats.total }}</div>
-            <div class="summary-label">总次数</div>
+          <div class="summary-card">
+            <div class="summary-icon">
+              <i class="mdi mdi-check-circle"></i>
+            </div>
+            <div class="summary-data">
+              <div class="summary-value success">{{ stats.success }}</div>
+              <div class="summary-label">成功</div>
+            </div>
+          </div>
+          <div class="summary-card">
+            <div class="summary-icon">
+              <i class="mdi mdi-flash"></i>
+            </div>
+            <div class="summary-data">
+              <div class="summary-value">{{ stats.averageTime }}s</div>
+              <div class="summary-label">平均用时</div>
+            </div>
+          </div>
+          <div class="summary-card">
+            <div class="summary-icon">
+              <i class="mdi mdi-trophy"></i>
+            </div>
+            <div class="summary-data">
+              <div class="summary-value highlight">{{ stats.bestTime }}s</div>
+              <div class="summary-label">最佳成绩</div>
+            </div>
           </div>
         </div>
-        <div class="summary-card">
-          <div class="summary-icon">
-            <i class="mdi mdi-check-circle"></i>
+      </div>
+
+      <!-- 限时模式统计 -->
+      <div class="stats-section" v-if="stats.timed && stats.timed.total > 0">
+        <div class="section-title">
+          <i class="mdi mdi-timer"></i>
+          限时模式
+        </div>
+        <div class="stats-summary">
+          <div class="summary-card timed">
+            <div class="summary-data">
+              <div class="summary-value">{{ stats.timed.total }}</div>
+              <div class="summary-label">训练次数</div>
+            </div>
           </div>
-          <div class="summary-data">
-            <div class="summary-value success">{{ stats.success }}</div>
-            <div class="summary-label">成功</div>
+          <div class="summary-card timed">
+            <div class="summary-data">
+              <div class="summary-value success">{{ stats.timed.success }}</div>
+              <div class="summary-label">成功次数</div>
+            </div>
+          </div>
+          <div class="summary-card timed">
+            <div class="summary-data">
+              <div class="summary-value">{{ stats.timed.averageTime }}s</div>
+              <div class="summary-label">平均用时</div>
+            </div>
+          </div>
+          <div class="summary-card timed">
+            <div class="summary-data">
+              <div class="summary-value highlight">{{ stats.timed.bestTime || '-' }}s</div>
+              <div class="summary-label">最佳成绩</div>
+            </div>
           </div>
         </div>
-        <div class="summary-card">
-          <div class="summary-icon">
-            <i class="mdi mdi-flash"></i>
-          </div>
-          <div class="summary-data">
-            <div class="summary-value">{{ stats.averageTime }}s</div>
-            <div class="summary-label">平均用时</div>
-          </div>
+      </div>
+
+      <!-- 不限时模式统计 -->
+      <div class="stats-section" v-if="stats.unlimited && stats.unlimited.total > 0">
+        <div class="section-title">
+          <i class="mdi mdi-infinity"></i>
+          不限时模式
         </div>
-        <div class="summary-card">
-          <div class="summary-icon">
-            <i class="mdi mdi-trophy"></i>
+        <div class="stats-summary">
+          <div class="summary-card unlimited">
+            <div class="summary-data">
+              <div class="summary-value">{{ stats.unlimited.total }}</div>
+              <div class="summary-label">练习次数</div>
+            </div>
           </div>
-          <div class="summary-data">
-            <div class="summary-value highlight">{{ stats.bestTime }}s</div>
-            <div class="summary-label">最佳成绩</div>
+          <div class="summary-card unlimited">
+            <div class="summary-data">
+              <div class="summary-value success">{{ stats.unlimited.success }}</div>
+              <div class="summary-label">完成次数</div>
+            </div>
+          </div>
+          <div class="summary-card unlimited">
+            <div class="summary-data">
+              <div class="summary-value">{{ stats.unlimited.averageTime }}s</div>
+              <div class="summary-label">平均用时</div>
+            </div>
+          </div>
+          <div class="summary-card unlimited">
+            <div class="summary-data">
+              <div class="summary-value highlight">{{ stats.unlimited.bestTime || '-' }}s</div>
+              <div class="summary-label">最佳成绩</div>
+            </div>
           </div>
         </div>
       </div>
@@ -81,6 +153,8 @@ const stats = computed(() => {
     averageTime: 0,
     bestTime: null,
     worstTime: null,
+    unlimited: { total: 0, success: 0, averageTime: 0, bestTime: null },
+    timed: { total: 0, success: 0, averageTime: 0, bestTime: null },
   }
 })
 
@@ -155,6 +229,23 @@ const timeChartData = computed(() => {
   margin: 0 auto;
 }
 
+.stats-section {
+  margin-bottom: 8px;
+}
+
+.section-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #f1f5f9;
+  margin-bottom: 12px;
+  padding-left: 8px;
+  border-left: 3px solid #00d9ff;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .stats-empty {
   display: flex;
   flex-direction: column;
@@ -198,6 +289,28 @@ const timeChartData = computed(() => {
     transform: translateY(-2px);
     border-color: rgba(0, 217, 255, 0.3);
     box-shadow: 0 8px 24px rgba(0, 217, 255, 0.1);
+  }
+
+  &.timed {
+    border-color: rgba(0, 217, 255, 0.25);
+
+    &:hover {
+      border-color: rgba(0, 217, 255, 0.4);
+      box-shadow: 0 8px 24px rgba(0, 217, 255, 0.15);
+    }
+  }
+
+  &.unlimited {
+    border-color: rgba(74, 222, 128, 0.25);
+
+    &:hover {
+      border-color: rgba(74, 222, 128, 0.4);
+      box-shadow: 0 8px 24px rgba(74, 222, 128, 0.15);
+    }
+
+    .summary-value {
+      color: rgba(74, 222, 128, 0.9);
+    }
   }
 }
 

@@ -67,7 +67,7 @@ const icon = computed(() => {
 const title = computed(() => {
   switch (props.record.result) {
     case 'success':
-      return '挑战成功'
+      return props.record.isUnlimited ? '练习完成' : '挑战成功'
     case 'fail':
       return '挑战失败'
     case 'timeout':
@@ -80,7 +80,7 @@ const title = computed(() => {
 const message = computed(() => {
   switch (props.record.result) {
     case 'success':
-      return '恭喜你完成了舒尔特表训练！'
+      return props.record.isUnlimited ? '完成了舒尔特表练习！' : '恭喜你完成了舒尔特表训练！'
     case 'fail':
       return '点击顺序错误，请继续努力！'
     case 'timeout':
@@ -90,26 +90,47 @@ const message = computed(() => {
   }
 })
 
+// 评级计算：不限时模式使用更宽松的标准
 const rating = computed(() => {
   if (props.record.result !== 'success') return '-'
-  
+
   const time = props.record.timeUsed
-  if (time <= 8) return 'S级'
-  if (time <= 15) return 'A级'
-  if (time <= 20) return 'B级'
-  if (time <= 25) return 'C级'
-  return 'D级'
+
+  if (props.record.isUnlimited) {
+    // 不限时模式：更宽松的评级
+    if (time <= 15) return 'S级'
+    if (time <= 25) return 'A级'
+    if (time <= 35) return 'B级'
+    if (time <= 50) return 'C级'
+    return 'D级'
+  } else {
+    // 限时模式：原有标准
+    if (time <= 8) return 'S级'
+    if (time <= 15) return 'A级'
+    if (time <= 20) return 'B级'
+    if (time <= 25) return 'C级'
+    return 'D级'
+  }
 })
 
 const ratingClass = computed(() => {
   if (props.record.result !== 'success') return ''
-  
+
   const time = props.record.timeUsed
-  if (time <= 8) return 'rating-s'
-  if (time <= 15) return 'rating-a'
-  if (time <= 20) return 'rating-b'
-  if (time <= 25) return 'rating-c'
-  return 'rating-d'
+
+  if (props.record.isUnlimited) {
+    if (time <= 15) return 'rating-s'
+    if (time <= 25) return 'rating-a'
+    if (time <= 35) return 'rating-b'
+    if (time <= 50) return 'rating-c'
+    return 'rating-d'
+  } else {
+    if (time <= 8) return 'rating-s'
+    if (time <= 15) return 'rating-a'
+    if (time <= 20) return 'rating-b'
+    if (time <= 25) return 'rating-c'
+    return 'rating-d'
+  }
 })
 </script>
 
