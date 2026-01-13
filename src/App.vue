@@ -51,7 +51,7 @@ const createParticles = () => {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .app-container {
   position: relative;
   min-height: 100vh;
@@ -65,10 +65,10 @@ const createParticles = () => {
   z-index: 0;
   pointer-events: none;
   transition: opacity 0.3s ease;
-}
 
-.background-effects.hide-particles {
-  opacity: 0;
+  &.hide-particles {
+    opacity: 0;
+  }
 }
 
 .particles-container {
@@ -84,6 +84,7 @@ const createParticles = () => {
   padding-bottom: 80px;
 }
 
+// Page transitions
 .page-enter-active,
 .page-leave-active {
   transition: all 0.3s ease;

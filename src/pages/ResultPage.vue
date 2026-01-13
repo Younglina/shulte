@@ -38,7 +38,7 @@ const handleBack = () => {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .result-page {
   min-height: 100vh;
   padding: 24px 20px;
@@ -81,12 +81,12 @@ const handleBack = () => {
   border-radius: 16px;
   cursor: pointer;
   transition: all 0.3s ease;
-}
 
-.back-button:hover {
-  background: rgba(0, 217, 255, 0.2);
-  box-shadow: 0 8px 24px rgba(0, 217, 255, 0.2);
-  transform: translateY(-2px);
+  &:hover {
+    background: rgba(0, 217, 255, 0.2);
+    box-shadow: 0 8px 24px rgba(0, 217, 255, 0.2);
+    transform: translateY(-2px);
+  }
 }
 
 .back-icon {

@@ -32,7 +32,7 @@ const formattedTime = computed(() => {
 })
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .timer-container {
   display: flex;
   justify-content: center;
@@ -69,6 +69,7 @@ const formattedTime = computed(() => {
   text-align: center;
 }
 
+// Mobile styles
 @media (max-width: 480px) {
   .timer-value {
     font-size: 0.9rem;

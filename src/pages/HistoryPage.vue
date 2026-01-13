@@ -6,10 +6,7 @@
     </div>
 
     <div class="history-content">
-      <Tabs v-model="activeTab" :tabs="tabs" />
-      
-      <HistoryList v-if="activeTab === 'records'" :records="historyList" @clear="clearHistory" />
-      <StatsView v-else />
+      <HistoryList :records="historyList" @clear="clearHistory" />
     </div>
   </div>
 </template>
@@ -17,23 +14,16 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { useLocalStorage } from '../composables/useLocalStorage'
-import Tabs from '../components/Tabs.vue'
 import HistoryList from '../components/HistoryList.vue'
-import StatsView from './StatsView.vue'
 
-const { history, clearHistory, getHistory } = useLocalStorage()
+const { clearHistory, getHistory } = useLocalStorage()
 
 const historyList = computed(() => getHistory())
 
-const activeTab = ref('records')
 
-const tabs = [
-  { id: 'records', label: '记录', icon: '📊' },
-  { id: 'stats', label: '统计', icon: '📈' },
-]
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .history-page {
   min-height: 100vh;
   padding: 24px 20px;

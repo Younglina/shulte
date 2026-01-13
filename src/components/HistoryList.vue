@@ -6,7 +6,9 @@
     </div>
 
     <div v-if="records.length === 0" class="history-empty">
-      <div class="empty-icon">📊</div>
+      <div class="empty-icon">
+        <i class="mdi mdi-chart-bar"></i>
+      </div>
       <div class="empty-text">暂无训练记录</div>
       <div class="empty-hint">开始第一次训练吧！</div>
     </div>
@@ -18,9 +20,11 @@
         class="history-item"
         :class="`result-${record.result}`"
       >
-        <div class="history-item-left">
-          <div class="history-icon">{{ getResultIcon(record.result) }}</div>
-          <div class="history-info">
+          <div class="history-item-left">
+            <div class="history-icon">
+              <i :class="`mdi ${getResultIcon(record.result)}`"></i>
+            </div>
+            <div class="history-info">
             <div class="history-date">{{ formatDate(record.timestamp) }}</div>
             <div class="history-mode">{{ record.mode }} 模式</div>
           </div>
@@ -57,13 +61,13 @@ const emit = defineEmits(['clear'])
 const getResultIcon = (result) => {
   switch (result) {
     case 'success':
-      return '✅'
+      return 'mdi-check-circle'
     case 'fail':
-      return '❌'
+      return 'mdi-close-circle'
     case 'timeout':
-      return '⏰'
+      return 'mdi-clock-alert'
     default:
-      return '📊'
+      return 'mdi-chart-bar'
   }
 }
 
@@ -107,7 +111,7 @@ const handleClear = () => {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .history-list {
   padding: 16px;
 }
@@ -180,23 +184,28 @@ const handleClear = () => {
   border: 1px solid rgba(0, 217, 255, 0.15);
   border-radius: 12px;
   transition: all 0.3s ease;
-}
 
-.history-item:hover {
-  transform: translateX(4px);
-  border-color: rgba(0, 217, 255, 0.3);
-}
+  &:hover {
+    transform: translateX(4px);
+    border-color: rgba(0, 217, 255, 0.3);
+  }
 
-.history-item.result-success {
-  border-left: 4px solid #4ade80;
-}
+  &.result-success {
+    border-left: 4px solid #4ade80;
 
-.history-item.result-fail {
-  border-left: 4px solid #ff2d55;
-}
+    .history-rating {
+      background: rgba(74, 222, 128, 0.2);
+      color: #4ade80;
+    }
+  }
 
-.history-item.result-timeout {
-  border-left: 4px solid #f59e0b;
+  &.result-fail {
+    border-left: 4px solid #ff2d55;
+  }
+
+  &.result-timeout {
+    border-left: 4px solid #f59e0b;
+  }
 }
 
 .history-item-left {
@@ -247,11 +256,6 @@ const handleClear = () => {
   border-radius: 6px;
 }
 
-.history-item.result-success .history-rating {
-  background: rgba(74, 222, 128, 0.2);
-  color: #4ade80;
-}
-
 .clear-button {
   width: 100%;
   padding: 16px;
@@ -264,14 +268,15 @@ const handleClear = () => {
   border-radius: 12px;
   cursor: pointer;
   transition: all 0.3s ease;
+
+  &:hover {
+    background: rgba(255, 45, 85, 0.2);
+    border-color: rgba(255, 45, 85, 0.5);
+    transform: translateY(-2px);
+  }
 }
 
-.clear-button:hover {
-  background: rgba(255, 45, 85, 0.2);
-  border-color: rgba(255, 45, 85, 0.5);
-  transform: translateY(-2px);
-}
-
+// Mobile styles
 @media (max-width: 480px) {
   .history-item {
     padding: 12px;

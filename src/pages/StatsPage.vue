@@ -1,35 +1,45 @@
 <template>
-  <div class="stats-view">
+  <div class="stats-page">
     <div v-if="!stats || stats.total === 0" class="stats-empty">
-      <div class="empty-icon">📊</div>
+      <div class="empty-icon">
+        <i class="mdi mdi-chart-bar"></i>
+      </div>
       <div class="empty-text">暂无统计数据</div>
     </div>
 
     <template v-else>
       <div class="stats-summary">
         <div class="summary-card">
-          <div class="summary-icon">🎯</div>
+          <div class="summary-icon">
+            <i class="mdi mdi-bullseye"></i>
+          </div>
           <div class="summary-data">
             <div class="summary-value">{{ stats.total }}</div>
             <div class="summary-label">总次数</div>
           </div>
         </div>
         <div class="summary-card">
-          <div class="summary-icon">✅</div>
+          <div class="summary-icon">
+            <i class="mdi mdi-check-circle"></i>
+          </div>
           <div class="summary-data">
             <div class="summary-value success">{{ stats.success }}</div>
             <div class="summary-label">成功</div>
           </div>
         </div>
         <div class="summary-card">
-          <div class="summary-icon">⚡</div>
+          <div class="summary-icon">
+            <i class="mdi mdi-flash"></i>
+          </div>
           <div class="summary-data">
             <div class="summary-value">{{ stats.averageTime }}s</div>
             <div class="summary-label">平均用时</div>
           </div>
         </div>
         <div class="summary-card">
-          <div class="summary-icon">🏆</div>
+          <div class="summary-icon">
+            <i class="mdi mdi-trophy"></i>
+          </div>
           <div class="summary-data">
             <div class="summary-value highlight">{{ stats.bestTime }}s</div>
             <div class="summary-label">最佳成绩</div>
@@ -134,11 +144,15 @@ const timeChartData = computed(() => {
 })
 </script>
 
-<style scoped>
-.stats-view {
+<style scoped lang="scss">
+.stats-page {
   display: flex;
   flex-direction: column;
+  min-height: 100vh;
+  padding: 24px 20px;
   gap: 24px;
+  max-width: 600px;
+  margin: 0 auto;
 }
 
 .stats-empty {
@@ -150,18 +164,18 @@ const timeChartData = computed(() => {
   background: rgba(15, 21, 32, 0.6);
   border: 1px dashed rgba(0, 217, 255, 0.2);
   border-radius: 16px;
-}
 
-.empty-icon {
-  font-size: 4rem;
-  margin-bottom: 16px;
-  opacity: 0.5;
-}
+  &-icon {
+    font-size: 4rem;
+    margin-bottom: 16px;
+    opacity: 0.5;
+  }
 
-.empty-text {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 1rem;
-  color: rgba(241, 245, 249, 0.6);
+  &-text {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1rem;
+    color: rgba(241, 245, 249, 0.6);
+  }
 }
 
 .stats-summary {
@@ -179,12 +193,12 @@ const timeChartData = computed(() => {
   border: 1px solid rgba(0, 217, 255, 0.15);
   border-radius: 12px;
   transition: all 0.3s ease;
-}
 
-.summary-card:hover {
-  transform: translateY(-2px);
-  border-color: rgba(0, 217, 255, 0.3);
-  box-shadow: 0 8px 24px rgba(0, 217, 255, 0.1);
+  &:hover {
+    transform: translateY(-2px);
+    border-color: rgba(0, 217, 255, 0.3);
+    box-shadow: 0 8px 24px rgba(0, 217, 255, 0.1);
+  }
 }
 
 .summary-icon {
@@ -203,16 +217,16 @@ const timeChartData = computed(() => {
   font-size: 1.5rem;
   font-weight: 700;
   color: #f1f5f9;
-}
 
-.summary-value.success {
-  color: #4ade80;
-  text-shadow: 0 0 10px rgba(74, 222, 128, 0.5);
-}
+  &.success {
+    color: #4ade80;
+    text-shadow: 0 0 10px rgba(74, 222, 128, 0.5);
+  }
 
-.summary-value.highlight {
-  color: #00d9ff;
-  text-shadow: 0 0 10px rgba(0, 217, 255, 0.5);
+  &.highlight {
+    color: #00d9ff;
+    text-shadow: 0 0 10px rgba(0, 217, 255, 0.5);
+  }
 }
 
 .summary-label {
@@ -223,6 +237,7 @@ const timeChartData = computed(() => {
   letter-spacing: 0.05em;
 }
 
+// Mobile styles
 @media (max-width: 480px) {
   .stats-summary {
     grid-template-columns: 1fr;

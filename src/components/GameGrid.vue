@@ -38,7 +38,7 @@ const handleCellClick = (number) => {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .game-grid-container {
   display: flex;
   justify-content: center;
@@ -55,15 +55,17 @@ const handleCellClick = (number) => {
   background: transparent;
   border: 2px solid #000;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-}
 
-.game-grid.is-playing .grid-cell {
-  cursor: pointer;
-  transition: background 0.1s ease;
-}
+  &.is-playing {
+    .grid-cell {
+      cursor: pointer;
+      transition: background 0.1s ease;
 
-.game-grid.is-playing .grid-cell:hover {
-  background: #f0f0f0;
+      &:hover {
+        background: #f0f0f0;
+      }
+    }
+  }
 }
 
 .grid-cell {
@@ -86,6 +88,7 @@ const handleCellClick = (number) => {
   user-select: none;
 }
 
+// Mobile styles
 @media (max-width: 480px) {
   .game-grid {
     gap: 0;

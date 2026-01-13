@@ -8,7 +8,9 @@
         class="nav-item"
         :class="{ active: isActive(item.path) }"
       >
-        <div class="nav-icon">{{ item.icon }}</div>
+        <div class="nav-icon">
+          <i :class="`mdi ${item.icon}`"></i>
+        </div>
         <div class="nav-label">{{ item.label }}</div>
       </router-link>
     </div>
@@ -21,8 +23,9 @@ import { useRoute } from 'vue-router'
 const route = useRoute()
 
 const navItems = [
-  { path: '/training', icon: '🎯', label: '训练' },
-  { path: '/history', icon: '📊', label: '记录' },
+  { path: '/training', icon: 'mdi-bullseye', label: '训练' },
+  { path: '/history', icon: 'mdi-chart-bar', label: '记录' },
+  { path: '/stats', icon: 'mdi-chart-line', label: '统计' },
 ]
 
 const isActive = (path) => {
@@ -30,7 +33,7 @@ const isActive = (path) => {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .navigation {
   position: fixed;
   bottom: 0;
@@ -61,37 +64,42 @@ const isActive = (path) => {
   transition: all 0.3s ease;
   border-radius: 12px;
   position: relative;
-}
 
-.nav-item:hover {
-  background: rgba(0, 217, 255, 0.1);
-}
+  &:hover {
+    background: rgba(0, 217, 255, 0.1);
+  }
 
-.nav-item.active {
-  background: rgba(0, 217, 255, 0.15);
-}
+  &.active {
+    background: rgba(0, 217, 255, 0.15);
 
-.nav-item.active::after {
-  content: '';
-  position: absolute;
-  bottom: -8px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 4px;
-  height: 4px;
-  background: #00d9ff;
-  border-radius: 50%;
-  box-shadow: 0 0 10px #00d9ff;
+    .nav-icon {
+      transform: translateY(-2px);
+      filter: drop-shadow(0 0 8px rgba(0, 217, 255, 0.5));
+    }
+
+    .nav-label {
+      color: #00d9ff;
+      font-weight: 500;
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 4px;
+      height: 4px;
+      background: #00d9ff;
+      border-radius: 50%;
+      box-shadow: 0 0 10px #00d9ff;
+    }
+  }
 }
 
 .nav-icon {
   font-size: 1.5rem;
   transition: transform 0.3s ease;
-}
-
-.nav-item.active .nav-icon {
-  transform: translateY(-2px);
-  filter: drop-shadow(0 0 8px rgba(0, 217, 255, 0.5));
 }
 
 .nav-label {
@@ -101,11 +109,7 @@ const isActive = (path) => {
   transition: color 0.3s ease;
 }
 
-.nav-item.active .nav-label {
-  color: #00d9ff;
-  font-weight: 500;
-}
-
+// Desktop styles
 @media (min-width: 768px) {
   .navigation {
     max-width: 400px;

@@ -1,6 +1,8 @@
 <template>
   <div class="result-card" :class="resultClass">
-    <div class="result-icon">{{ icon }}</div>
+    <div class="result-icon">
+      <i :class="`mdi ${icon}`"></i>
+    </div>
     <div class="result-title">{{ title }}</div>
     <div class="result-message">{{ message }}</div>
     
@@ -52,13 +54,13 @@ const resultClass = computed(() => {
 const icon = computed(() => {
   switch (props.record.result) {
     case 'success':
-      return '🎉'
+      return 'mdi-party-popper'
     case 'fail':
-      return '❌'
+      return 'mdi-close-circle'
     case 'timeout':
-      return '⏰'
+      return 'mdi-clock-alert'
     default:
-      return '📊'
+      return 'mdi-chart-bar'
   }
 })
 
@@ -111,7 +113,7 @@ const ratingClass = computed(() => {
 })
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .result-card {
   padding: 32px;
   background: rgba(15, 21, 32, 0.9);
@@ -119,27 +121,42 @@ const ratingClass = computed(() => {
   border-radius: 20px;
   text-align: center;
   animation: fadeIn 0.5s ease-out;
-}
 
-.result-success {
-  border-color: #4ade80;
-  box-shadow: 
-    0 0 40px rgba(74, 222, 128, 0.2),
-    inset 0 0 20px rgba(74, 222, 128, 0.05);
-}
+  &.result-success {
+    border-color: #4ade80;
+    box-shadow:
+      0 0 40px rgba(74, 222, 128, 0.2),
+      inset 0 0 20px rgba(74, 222, 128, 0.05);
 
-.result-fail {
-  border-color: #ff2d55;
-  box-shadow: 
-    0 0 40px rgba(255, 45, 85, 0.2),
-    inset 0 0 20px rgba(255, 45, 85, 0.05);
-}
+    .result-title {
+      color: #4ade80;
+      text-shadow: 0 0 20px rgba(74, 222, 128, 0.5);
+    }
+  }
 
-.result-timeout {
-  border-color: #f59e0b;
-  box-shadow: 
-    0 0 40px rgba(245, 158, 11, 0.2),
-    inset 0 0 20px rgba(245, 158, 11, 0.05);
+  &.result-fail {
+    border-color: #ff2d55;
+    box-shadow:
+      0 0 40px rgba(255, 45, 85, 0.2),
+      inset 0 0 20px rgba(255, 45, 85, 0.05);
+
+    .result-title {
+      color: #ff2d55;
+      text-shadow: 0 0 20px rgba(255, 45, 85, 0.5);
+    }
+  }
+
+  &.result-timeout {
+    border-color: #f59e0b;
+    box-shadow:
+      0 0 40px rgba(245, 158, 11, 0.2),
+      inset 0 0 20px rgba(245, 158, 11, 0.05);
+
+    .result-title {
+      color: #f59e0b;
+      text-shadow: 0 0 20px rgba(245, 158, 11, 0.5);
+    }
+  }
 }
 
 .result-icon {
@@ -156,21 +173,6 @@ const ratingClass = computed(() => {
   animation: slideUp 0.5s ease-out 0.2s backwards;
 }
 
-.result-success .result-title {
-  color: #4ade80;
-  text-shadow: 0 0 20px rgba(74, 222, 128, 0.5);
-}
-
-.result-fail .result-title {
-  color: #ff2d55;
-  text-shadow: 0 0 20px rgba(255, 45, 85, 0.5);
-}
-
-.result-timeout .result-title {
-  color: #f59e0b;
-  text-shadow: 0 0 20px rgba(245, 158, 11, 0.5);
-}
-
 .result-message {
   font-family: 'JetBrains Mono', monospace;
   font-size: 1rem;
@@ -182,37 +184,37 @@ const ratingClass = computed(() => {
 .grid-preview {
   margin-bottom: 24px;
   animation: slideUp 0.5s ease-out 0.35s backwards;
-}
 
-.grid-preview-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 16px;
-  background: rgba(10, 14, 23, 0.5);
-  border-radius: 12px;
-}
+  &-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 16px;
+    background: rgba(10, 14, 23, 0.5);
+    border-radius: 12px;
+  }
 
-.grid-preview-grid {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 4px;
-  padding: 4px;
-  background: rgba(241, 245, 249, 0.1);
-  border-radius: 8px;
-}
+  &-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 4px;
+    padding: 4px;
+    background: rgba(241, 245, 249, 0.1);
+    border-radius: 8px;
+  }
 
-.grid-preview-cell {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  aspect-ratio: 1;
-  background: rgba(26, 35, 50, 0.95);
-  border-radius: 4px;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.75rem;
-  font-weight: 500;
-  color: rgba(241, 245, 249, 0.9);
+  &-cell {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    aspect-ratio: 1;
+    background: rgba(26, 35, 50, 0.95);
+    border-radius: 4px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: rgba(241, 245, 249, 0.9);
+  }
 }
 
 .result-stats {
@@ -245,33 +247,34 @@ const ratingClass = computed(() => {
   font-size: 1.25rem;
   font-weight: 600;
   color: #f1f5f9;
+
+  &.rating-s {
+    color: #ffd700;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+  }
+
+  &.rating-a {
+    color: #4ade80;
+    text-shadow: 0 0 10px rgba(74, 222, 128, 0.5);
+  }
+
+  &.rating-b {
+    color: #00d9ff;
+    text-shadow: 0 0 10px rgba(0, 217, 255, 0.5);
+  }
+
+  &.rating-c {
+    color: #f59e0b;
+    text-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
+  }
+
+  &.rating-d {
+    color: #ff2d55;
+    text-shadow: 0 0 10px rgba(255, 45, 85, 0.5);
+  }
 }
 
-.rating-s {
-  color: #ffd700;
-  text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
-}
-
-.rating-a {
-  color: #4ade80;
-  text-shadow: 0 0 10px rgba(74, 222, 128, 0.5);
-}
-
-.rating-b {
-  color: #00d9ff;
-  text-shadow: 0 0 10px rgba(0, 217, 255, 0.5);
-}
-
-.rating-c {
-  color: #f59e0b;
-  text-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
-}
-
-.rating-d {
-  color: #ff2d55;
-  text-shadow: 0 0 10px rgba(255, 45, 85, 0.5);
-}
-
+// Mobile styles
 @media (max-width: 480px) {
   .result-card {
     padding: 24px 16px;

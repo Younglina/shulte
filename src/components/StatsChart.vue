@@ -162,7 +162,7 @@ watch(() => props.data, () => {
 }, { deep: true })
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .stats-chart {
   padding: 20px;
   background: rgba(15, 21, 32, 0.8);

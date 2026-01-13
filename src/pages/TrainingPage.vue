@@ -2,7 +2,7 @@
   <div class="training-page">
     <div class="page-header">
       <h1 class="page-title">舒尔特表训练</h1>
-      <p class="page-subtitle">航天员级别专注力训练</p>
+      <p class="page-subtitle">以较为标准的1cm x 1cm 的白底黑字舒尔特表，训练您的注意力和反应速度</p>
     </div>
 
     <div class="training-content">
@@ -11,23 +11,31 @@
         
         <div class="start-section">
           <button class="start-button" @click="handleStart">
-            <span class="start-icon">🚀</span>
+            <span class="start-icon">
+              <i class="mdi mdi-rocket-launch"></i>
+            </span>
             <span class="start-text">开始训练</span>
           </button>
           
           <div class="info-cards">
             <div class="info-card">
-              <div class="info-icon">📖</div>
+              <div class="info-icon">
+                <i class="mdi mdi-book-open-outline"></i>
+              </div>
               <div class="info-title">规则说明</div>
               <div class="info-text">按 1-25 顺序点击数字</div>
             </div>
             <div class="info-card">
-              <div class="info-icon">⚠️</div>
+              <div class="info-icon">
+                <i class="mdi mdi-alert"></i>
+              </div>
               <div class="info-title">注意事项</div>
               <div class="info-text">点击错误即失败</div>
             </div>
             <div class="info-card">
-              <div class="info-icon">⏱️</div>
+              <div class="info-icon">
+                <i class="mdi mdi-timer-outline"></i>
+              </div>
               <div class="info-title">时间限制</div>
               <div class="info-text">{{ selectedMode }} 秒内完成</div>
             </div>
@@ -63,17 +71,23 @@
     <Transition name="modal">
       <div v-if="showFailModal" class="modal-overlay" @click.self="handleModalClose">
         <div class="modal-content">
-          <div class="modal-icon">❌</div>
+          <div class="modal-icon">
+            <i class="mdi mdi-close-circle"></i>
+          </div>
           <div class="modal-title">挑战失败</div>
           <div class="modal-message">点击顺序错误，请继续努力！</div>
-          
+
           <div class="modal-actions">
             <button class="modal-button primary" @click="handleRetry">
-              <span class="button-icon">🔄</span>
-              <span>立即重试</span>
+              <span class="button-icon">
+                <i class="mdi mdi-refresh"></i>
+              </span>
+              <span>再来一局</span>
             </button>
             <button class="modal-button secondary" @click="handleModalClose">
-              <span class="button-icon">🏠</span>
+              <span class="button-icon">
+                <i class="mdi mdi-home"></i>
+              </span>
               <span>返回首页</span>
             </button>
           </div>
@@ -85,9 +99,11 @@
     <Transition name="modal">
       <div v-if="showSuccessModal" class="modal-overlay success" @click.self="handleSuccessModalClose">
         <div class="modal-content success">
-          <div class="modal-icon">🎉</div>
+          <div class="modal-icon">
+            <i class="mdi mdi-party-popper"></i>
+          </div>
           <div class="modal-title">挑战成功</div>
-          <div class="modal-message">恭喜你完成了舒尔特表训练！</div>
+          <div class="modal-message">恭喜你完成了本次舒尔特表训练！</div>
           
           <div v-if="currentRecord?.gridNumbers" class="modal-grid-preview">
             <div class="grid-preview-container">
@@ -116,11 +132,15 @@
           
           <div class="modal-actions">
             <button class="modal-button primary" @click="handleRetry">
-              <span class="button-icon">🔄</span>
+              <span class="button-icon">
+                <i class="mdi mdi-refresh"></i>
+              </span>
               <span>再次挑战</span>
             </button>
             <button class="modal-button secondary" @click="handleSuccessModalClose">
-              <span class="button-icon">📊</span>
+              <span class="button-icon">
+                <i class="mdi mdi-chart-bar"></i>
+              </span>
               <span>查看记录</span>
             </button>
           </div>
@@ -132,7 +152,9 @@
     <Transition name="modal">
       <div v-if="showTimeoutModal" class="modal-overlay timeout" @click.self="handleTimeoutModalClose">
         <div class="modal-content timeout">
-          <div class="modal-icon">⏰</div>
+          <div class="modal-icon">
+            <i class="mdi mdi-clock-alert"></i>
+          </div>
           <div class="modal-title">时间到</div>
           <div class="modal-message">时间耗尽，再试一次吧！</div>
           
@@ -149,11 +171,15 @@
           
           <div class="modal-actions">
             <button class="modal-button primary" @click="handleRetry">
-              <span class="button-icon">🔄</span>
+              <span class="button-icon">
+                <i class="mdi mdi-refresh"></i>
+              </span>
               <span>再次挑战</span>
             </button>
             <button class="modal-button secondary" @click="handleTimeoutModalClose">
-              <span class="button-icon">📊</span>
+              <span class="button-icon">
+                <i class="mdi mdi-chart-bar"></i>
+              </span>
               <span>查看记录</span>
             </button>
           </div>
@@ -283,7 +309,7 @@ const handleViewHistory = () => {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .training-page {
   min-height: 100vh;
   padding: 24px 20px;
@@ -339,16 +365,16 @@ const handleViewHistory = () => {
   border-radius: 16px;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 
+  box-shadow:
     0 0 30px rgba(0, 217, 255, 0.3),
     0 8px 24px rgba(0, 217, 255, 0.2);
-}
 
-.start-button:hover {
-  transform: translateY(-4px);
-  box-shadow: 
-    0 0 40px rgba(0, 217, 255, 0.4),
-    0 12px 32px rgba(0, 217, 255, 0.3);
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow:
+      0 0 40px rgba(0, 217, 255, 0.4),
+      0 12px 32px rgba(0, 217, 255, 0.3);
+  }
 }
 
 .start-icon {
@@ -371,12 +397,12 @@ const handleViewHistory = () => {
   border: 1px solid rgba(0, 217, 255, 0.15);
   border-radius: 16px;
   transition: all 0.3s ease;
-}
 
-.info-card:hover {
-  transform: translateY(-4px);
-  border-color: rgba(0, 217, 255, 0.3);
-  box-shadow: 0 8px 24px rgba(0, 217, 255, 0.1);
+  &:hover {
+    transform: translateY(-4px);
+    border-color: rgba(0, 217, 255, 0.3);
+    box-shadow: 0 8px 24px rgba(0, 217, 255, 0.1);
+  }
 }
 
 .info-icon {
@@ -415,19 +441,19 @@ const handleViewHistory = () => {
   background: rgba(15, 21, 32, 0.8);
   border: 1px solid rgba(0, 217, 255, 0.15);
   border-radius: 12px;
-}
 
-.progress-label {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.875rem;
-  color: rgba(241, 245, 249, 0.6);
-}
+  &-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.875rem;
+    color: rgba(241, 245, 249, 0.6);
+  }
 
-.progress-value {
-  font-family: 'Orbitron', sans-serif;
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: #00d9ff;
+  &-value {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #00d9ff;
+  }
 }
 
 .result-section {
@@ -435,12 +461,12 @@ const handleViewHistory = () => {
   flex-direction: column;
   gap: 32px;
   animation: fadeIn 0.5s ease-out;
-}
 
-.result-actions {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 16px;
+  &-actions {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
 }
 
 .action-button {
@@ -456,37 +482,37 @@ const handleViewHistory = () => {
   border-radius: 16px;
   cursor: pointer;
   transition: all 0.3s ease;
-}
 
-.action-button.primary {
-  color: #f1f5f9;
-  background: rgba(0, 217, 255, 0.1);
-  border-color: #00d9ff;
-}
+  &.primary {
+    color: #f1f5f9;
+    background: rgba(0, 217, 255, 0.1);
+    border-color: #00d9ff;
 
-.action-button.primary:hover {
-  background: rgba(0, 217, 255, 0.2);
-  box-shadow: 0 8px 24px rgba(0, 217, 255, 0.2);
-  transform: translateY(-2px);
-}
+    &:hover {
+      background: rgba(0, 217, 255, 0.2);
+      box-shadow: 0 8px 24px rgba(0, 217, 255, 0.2);
+      transform: translateY(-2px);
+    }
+  }
 
-.action-button.secondary {
-  color: rgba(241, 245, 249, 0.8);
-  background: rgba(15, 21, 32, 0.8);
-  border-color: rgba(241, 245, 249, 0.2);
-}
+  &.secondary {
+    color: rgba(241, 245, 249, 0.8);
+    background: rgba(15, 21, 32, 0.8);
+    border-color: rgba(241, 245, 249, 0.2);
 
-.action-button.secondary:hover {
-  background: rgba(26, 35, 50, 0.8);
-  border-color: rgba(241, 245, 249, 0.3);
-  transform: translateY(-2px);
+    &:hover {
+      background: rgba(26, 35, 50, 0.8);
+      border-color: rgba(241, 245, 249, 0.3);
+      transform: translateY(-2px);
+    }
+  }
 }
 
 .action-icon {
   font-size: 1.25rem;
 }
 
-/* 弹窗样式 */
+/* Modal styles */
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -497,10 +523,10 @@ const handleViewHistory = () => {
   backdrop-filter: blur(8px);
   z-index: 1000;
   padding: 20px;
-}
 
-.modal-overlay.success {
-  background: rgba(0, 0, 0, 0.7);
+  &.success {
+    background: rgba(0, 0, 0, 0.7);
+  }
 }
 
 .modal-content {
@@ -514,24 +540,34 @@ const handleViewHistory = () => {
   background: rgba(10, 14, 23, 0.95);
   border: 2px solid rgba(255, 45, 85, 0.3);
   border-radius: 20px;
-  box-shadow: 
+  box-shadow:
     0 20px 60px rgba(0, 0, 0, 0.5),
     0 0 40px rgba(255, 45, 85, 0.2);
   animation: modalSlideUp 0.3s ease-out;
-}
 
-.modal-content.success {
-  border-color: rgba(74, 222, 128, 0.3);
-  box-shadow: 
-    0 20px 60px rgba(0, 0, 0, 0.5),
-    0 0 40px rgba(74, 222, 128, 0.2);
-}
+  &.success {
+    border-color: rgba(74, 222, 128, 0.3);
+    box-shadow:
+      0 20px 60px rgba(0, 0, 0, 0.5),
+      0 0 40px rgba(74, 222, 128, 0.2);
 
-.modal-content.timeout {
-  border-color: rgba(245, 158, 11, 0.3);
-  box-shadow: 
-    0 20px 60px rgba(0, 0, 0, 0.5),
-    0 0 40px rgba(245, 158, 11, 0.2);
+    .modal-title {
+      color: #4ade80;
+      text-shadow: 0 0 20px rgba(74, 222, 128, 0.5);
+    }
+  }
+
+  &.timeout {
+    border-color: rgba(245, 158, 11, 0.3);
+    box-shadow:
+      0 20px 60px rgba(0, 0, 0, 0.5),
+      0 0 40px rgba(245, 158, 11, 0.2);
+
+    .modal-title {
+      color: #f59e0b;
+      text-shadow: 0 0 20px rgba(245, 158, 11, 0.5);
+    }
+  }
 }
 
 .modal-icon {
@@ -546,16 +582,6 @@ const handleViewHistory = () => {
   color: #ff2d55;
   text-shadow: 0 0 20px rgba(255, 45, 85, 0.5);
   text-align: center;
-}
-
-.modal-content.success .modal-title {
-  color: #4ade80;
-  text-shadow: 0 0 20px rgba(74, 222, 128, 0.5);
-}
-
-.modal-content.timeout .modal-title {
-  color: #f59e0b;
-  text-shadow: 0 0 20px rgba(245, 158, 11, 0.5);
 }
 
 .modal-message {
@@ -683,36 +709,36 @@ const handleViewHistory = () => {
   cursor: pointer;
   transition: all 0.3s ease;
   width: 100%;
-}
 
-.modal-button.primary {
-  color: #f1f5f9;
-  background: linear-gradient(135deg, #00d9ff 0%, #00a8cc 100%);
-  border-color: #00d9ff;
-}
+  &.primary {
+    color: #f1f5f9;
+    background: linear-gradient(135deg, #00d9ff 0%, #00a8cc 100%);
+    border-color: #00d9ff;
 
-.modal-button.primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0, 217, 255, 0.3);
-}
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0, 217, 255, 0.3);
+    }
+  }
 
-.modal-button.secondary {
-  color: rgba(241, 245, 249, 0.8);
-  background: rgba(15, 21, 32, 0.8);
-  border-color: rgba(241, 245, 249, 0.2);
-}
+  &.secondary {
+    color: rgba(241, 245, 249, 0.8);
+    background: rgba(15, 21, 32, 0.8);
+    border-color: rgba(241, 245, 249, 0.2);
 
-.modal-button.secondary:hover {
-  background: rgba(26, 35, 50, 0.8);
-  border-color: rgba(241, 245, 249, 0.3);
-  transform: translateY(-2px);
+    &:hover {
+      background: rgba(26, 35, 50, 0.8);
+      border-color: rgba(241, 245, 249, 0.3);
+      transform: translateY(-2px);
+    }
+  }
 }
 
 .button-icon {
   font-size: 1.25rem;
 }
 
-/* 弹窗动画 */
+/* Modal animations */
 .modal-enter-active,
 .modal-leave-active {
   transition: opacity 0.3s ease;
