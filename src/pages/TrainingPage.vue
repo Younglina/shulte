@@ -378,7 +378,7 @@ const handleTimeoutModalClose = () => {
 }
 
 const handleViewHistory = () => {
-  router.push('/history')
+  router.push('/shulte/history')
 }
 
 </script>

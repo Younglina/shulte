@@ -39,7 +39,7 @@ const handleReplay = (record) => {
   sessionStorage.setItem('replayRecord', JSON.stringify(replayData))
 
   // 跳转到训练页面
-  router.push('/training?replay=true')
+  router.push('/shulte/training?replay=true')
 }
 </script>
 
