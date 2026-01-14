@@ -6,6 +6,12 @@
     </div>
 
     <div class="training-content">
+      <!-- replay 提示 -->
+      <div v-if="isReplay" class="replay-banner">
+        <i class="mdi mdi-refresh"></i>
+        <span>重新训练上次记录</span>
+      </div>
+
       <template v-if="!isPlaying && !currentRecord">
         <ModeSelector v-model="selectedMode" />
         
@@ -190,36 +196,75 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, computed, onMounted } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 import confetti from 'canvas-confetti'
 import { useGameLogic } from '../composables/useGameLogic'
 import { useLocalStorage } from '../composables/useLocalStorage'
 import ModeSelector from '../components/ModeSelector.vue'
 import TimerDisplay from '../components/TimerDisplay.vue'
 import GameGrid from '../components/GameGrid.vue'
-import ResultCard from '../components/ResultCard.vue'
 
 const router = useRouter()
+const route = useRoute()
 const {
   selectedMode,
   gridNumbers,
   nextNumber,
   isPlaying,
-  timeRemaining,
   displayTime,
   isUnlimitedMode,
-  isLowTime,
+  replayGame,
   startGame,
   handleClick,
   onTimeout,
 } = useGameLogic()
-const { saveHistory } = useLocalStorage()
+const { saveHistory, history } = useLocalStorage()
 
 const currentRecord = ref(null)
 const showFailModal = ref(false)
 const showSuccessModal = ref(false)
 const showTimeoutModal = ref(false)
+const isReplay = ref(false)
+let replayOfId = null
+
+// 检测是否为重新训练
+onMounted(() => {
+  if (route.query.replay === 'true') {
+    const replayDataStr = sessionStorage.getItem('replayRecord')
+    if (replayDataStr) {
+      try {
+        const replayData = JSON.parse(replayDataStr)
+        isReplay.value = true
+        replayOfId = replayData.replayOf
+        
+        // 设置模式
+        selectedMode.value = replayData.mode
+        
+        // 设置超时处理
+        onTimeout.value = (record) => {
+          const newRecord = {
+            ...record,
+            replayOf: replayOfId,
+          }
+          currentRecord.value = newRecord
+          saveHistory(newRecord)
+          showTimeoutModal.value = true
+        }
+        
+        // 延迟一点开始，让UI先渲染
+        setTimeout(() => {
+          replayGame(replayData.gridNumbers, replayData.mode)
+        }, 100)
+        
+        // 清理 sessionStorage
+        sessionStorage.removeItem('replayRecord')
+      } catch (e) {
+        console.error('解析replay数据失败:', e)
+      }
+    }
+  }
+})
 
 const ratingClass = computed(() => {
   if (!currentRecord.value || currentRecord.value.result !== 'success') return ''
@@ -269,9 +314,12 @@ const fireConfetti = () => {
 
 const handleStart = () => {
   onTimeout.value = (record) => {
-    currentRecord.value = record
-    saveHistory(record)
+    const newRecord = isReplay.value ? { ...record, replayOf: replayOfId } : record
+    currentRecord.value = newRecord
+    saveHistory(newRecord)
     showTimeoutModal.value = true
+    isReplay.value = false
+    replayOfId = null
   }
   startGame()
 }
@@ -279,14 +327,19 @@ const handleStart = () => {
 const handleGridClick = (number) => {
   const record = handleClick(number)
   if (record) {
-    currentRecord.value = record
-    saveHistory(record)
+    const newRecord = isReplay.value ? { ...record, replayOf: replayOfId } : record
+    currentRecord.value = newRecord
+    saveHistory(newRecord)
     
     if (record.result === 'fail') {
       showFailModal.value = true
+      isReplay.value = false
+      replayOfId = null
     } else if (record.result === 'success') {
       fireConfetti()
       showSuccessModal.value = true
+      isReplay.value = false
+      replayOfId = null
     }
   }
 }
@@ -296,14 +349,22 @@ const handleRetry = () => {
   showSuccessModal.value = false
   showTimeoutModal.value = false
   currentRecord.value = null
+  
   setTimeout(() => {
-    startGame()
+    if (isReplay.value && gridNumbers.value.length > 0) {
+      // replay模式下继续使用相同的gridNumbers
+      replayGame(gridNumbers.value, selectedMode.value)
+    } else {
+      startGame()
+    }
   }, 100)
 }
 
 const handleModalClose = () => {
   showFailModal.value = false
   currentRecord.value = null
+  isReplay.value = false
+  replayOfId = null
 }
 
 const handleSuccessModalClose = () => {
@@ -319,6 +380,7 @@ const handleTimeoutModalClose = () => {
 const handleViewHistory = () => {
   router.push('/history')
 }
+
 </script>
 
 <style scoped lang="scss">
@@ -353,6 +415,32 @@ const handleViewHistory = () => {
 .training-content {
   max-width: 600px;
   margin: 0 auto;
+}
+
+.replay-banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background: rgba(74, 222, 128, 0.1);
+  border: 1px solid rgba(74, 222, 128, 0.3);
+  border-radius: 12px;
+  margin-bottom: 24px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.875rem;
+  color: #4ade80;
+  animation: slideUp 0.3s ease-out;
+
+  i {
+    font-size: 1rem;
+    animation: spin 1s linear infinite;
+  }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
 .start-section {

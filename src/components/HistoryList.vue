@@ -18,27 +18,48 @@
         v-for="record in records"
         :key="record.id"
         class="history-item"
-        :class="`result-${record.result}`"
+        :class="[`result-${record.result}`, { 'is-replay': record.replayOf }]"
       >
         <div class="history-item-left">
           <div class="history-icon">
             <i :class="`mdi ${getResultIcon(record.result)}`"></i>
           </div>
           <div class="history-info">
-            <div class="history-date">{{ formatDate(record.timestamp) }}</div>
-            <div class="history-mode">{{ getModeDisplay(record) }}</div>
+            <div class="history-date">
+              #{{ record.id }}
+              <span v-if="record.replayOf" class="replay-badge">重练</span>
+            </div>
+            <div class="history-mode">{{ formatDate(record.timestamp) }} · {{ getModeDisplay(record) }}</div>
           </div>
         </div>
         <div class="history-item-right">
-          <div class="history-time">{{ record.timeUsed.toFixed(2) }}s</div>
-          <div v-if="record.result === 'success'" class="history-rating">
-            {{ getRating(record) }}
+          <div class="history-main-info">
+            <span class="history-time">{{ record.timeUsed.toFixed(2) }}s</span>
+            <span v-if="record.result === 'success'" class="history-rating">
+              {{ getRating(record) }}
+            </span>
+            <button
+              class="replay-button"
+              @click.stop="handleReplay(record)"
+              title="重新训练"
+            >
+              <i class="mdi mdi-refresh"></i>
+            </button>
+          </div>
+          <!-- 重练关联信息 -->
+          <div v-if="record.replayOf" class="replay-info">
+            <i class="mdi mdi-link"></i>
+            <span>原#{{ record.comparison?.originalId || record.replayOf }}</span>
+            <span v-if="record.comparison" class="comparison" :class="`comparison-${record.comparison.improvement}`">
+              <i :class="getComparisonIcon(record.comparison.improvement)"></i>
+              {{ record.comparison.timeDiff.toFixed(2) }}s
+            </span>
           </div>
         </div>
       </div>
     </div>
 
-    <button 
+    <button
       v-if="records.length > 0"
       class="clear-button"
       @click="handleClear"
@@ -56,7 +77,7 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['clear'])
+const emit = defineEmits(['clear', 'replay'])
 
 const getResultIcon = (result) => {
   switch (result) {
@@ -124,13 +145,45 @@ const getModeDisplay = (record) => {
   if (record.isUnlimited) {
     return '不限时'
   }
-  return `${record.mode}s 模式`
+  return `${record.mode}秒模式`
+}
+
+// 获取对比图标
+const getComparisonIcon = (improvement) => {
+  switch (improvement) {
+    case 'up':
+      return 'mdi mdi-arrow-up-thin' // 更快，提升
+    case 'down':
+      return 'mdi mdi-arrow-down-thin' // 更慢，下降
+    case 'same':
+      return 'mdi mdi-minus' // 相同
+    default:
+      return 'mdi mdi-help'
+  }
+}
+
+// 获取对比显示文本
+const getComparisonText = (improvement) => {
+  switch (improvement) {
+    case 'up':
+      return '提升'
+    case 'down':
+      return '下降'
+    case 'same':
+      return '不变'
+    default:
+      return ''
+  }
 }
 
 const handleClear = () => {
   if (confirm('确定要清空所有历史记录吗？')) {
     emit('clear')
   }
+}
+
+const handleReplay = (record) => {
+  emit('replay', record)
 }
 </script>
 
@@ -229,6 +282,11 @@ const handleClear = () => {
   &.result-timeout {
     border-left: 4px solid #f59e0b;
   }
+
+  &.is-replay {
+    background: rgba(15, 21, 32, 0.9);
+    border-color: rgba(74, 222, 128, 0.3);
+  }
 }
 
 .history-item-left {
@@ -251,6 +309,18 @@ const handleClear = () => {
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.875rem;
   color: rgba(241, 245, 249, 0.8);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.replay-badge {
+  font-size: 0.625rem;
+  padding: 2px 6px;
+  background: rgba(74, 222, 128, 0.2);
+  color: #4ade80;
+  border-radius: 4px;
+  font-weight: 500;
 }
 
 .history-mode {
@@ -261,6 +331,16 @@ const handleClear = () => {
 
 .history-item-right {
   text-align: right;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.history-main-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .history-time {
@@ -268,7 +348,6 @@ const handleClear = () => {
   font-size: 1.25rem;
   font-weight: 600;
   color: #00d9ff;
-  margin-bottom: 4px;
 }
 
 .history-rating {
@@ -277,6 +356,71 @@ const handleClear = () => {
   font-weight: 700;
   padding: 2px 8px;
   border-radius: 6px;
+}
+
+.replay-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  background: rgba(0, 217, 255, 0.1);
+  border: 1px solid rgba(0, 217, 255, 0.3);
+  border-radius: 4px;
+  color: #00d9ff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  vertical-align: middle;
+
+  &:hover {
+    background: rgba(0, 217, 255, 0.2);
+    border-color: #00d9ff;
+  }
+
+  i {
+    font-size: 0.75rem;
+  }
+}
+
+.replay-info {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.625rem;
+  color: rgba(241, 245, 249, 0.4);
+
+  i {
+    font-size: 0.625rem;
+  }
+}
+
+.comparison {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 500;
+
+  i {
+    font-size: 0.625rem;
+  }
+
+  &.comparison-up {
+    background: rgba(74, 222, 128, 0.15);
+    color: #4ade80;
+  }
+
+  &.comparison-down {
+    background: rgba(255, 45, 85, 0.15);
+    color: #ff2d55;
+  }
+
+  &.comparison-same {
+    background: rgba(241, 245, 249, 0.1);
+    color: rgba(241, 245, 249, 0.6);
+  }
 }
 
 .clear-button {

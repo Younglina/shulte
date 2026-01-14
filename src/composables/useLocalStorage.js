@@ -1,39 +1,61 @@
 import { ref, onMounted } from 'vue'
-
-const STORAGE_KEY = 'shuerte_history'
+import * as db from '../services/indexedDB'
 
 export function useLocalStorage() {
   const history = ref([])
 
-  onMounted(() => {
-    loadHistory()
+  // Load history on mount
+  onMounted(async () => {
+    await loadHistory()
   })
 
-  const loadHistory = () => {
+  const loadHistory = async () => {
     try {
-      const saved = localStorage.getItem(STORAGE_KEY)
-      if (saved) {
-        history.value = JSON.parse(saved)
-      }
+      const records = await db.getAllRecords()
+      history.value = records
     } catch (error) {
       console.error('加载历史记录失败:', error)
       history.value = []
     }
   }
 
-  const saveHistory = (newRecord) => {
-    history.value.unshift(newRecord)
+  const saveHistory = async (record) => {
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(history.value))
+      // Generate comparison data if this is a replay
+      let recordToSave = { ...record }
+
+      if (record.replayOf) {
+        const originalRecord = await db.getRecord(record.replayOf)
+        if (originalRecord) {
+          const timeDiff = originalRecord.timeUsed - record.timeUsed
+          const improvement = timeDiff > 0 ? 'up' : timeDiff < 0 ? 'down' : 'same'
+          recordToSave.comparison = {
+            originalId: originalRecord.id,
+            originalTime: originalRecord.timeUsed,
+            improvement,
+            timeDiff: parseFloat(Math.abs(timeDiff).toFixed(2)),
+          }
+        }
+      }
+
+      // Add to IndexedDB (auto-generates ID)
+      const newId = await db.addRecord(recordToSave)
+      recordToSave.id = newId
+
+      // Update local state
+      history.value.unshift(recordToSave)
+
+      return newId
     } catch (error) {
       console.error('保存历史记录失败:', error)
+      return null
     }
   }
 
-  const clearHistory = () => {
-    history.value = []
+  const clearHistory = async () => {
     try {
-      localStorage.removeItem(STORAGE_KEY)
+      await db.clearAllRecords()
+      history.value = []
     } catch (error) {
       console.error('清除历史记录失败:', error)
     }
@@ -41,6 +63,24 @@ export function useLocalStorage() {
 
   const getHistory = () => {
     return history.value
+  }
+
+  const getRecordById = async (id) => {
+    try {
+      return await db.getRecord(id)
+    } catch (error) {
+      console.error('获取记录失败:', error)
+      return null
+    }
+  }
+
+  const getReplaysOf = async (originalId) => {
+    try {
+      return await db.getReplaysOf(originalId)
+    } catch (error) {
+      console.error('获取重练记录失败:', error)
+      return []
+    }
   }
 
   const getStats = () => {
@@ -111,6 +151,8 @@ export function useLocalStorage() {
     saveHistory,
     clearHistory,
     getHistory,
+    getRecordById,
+    getReplaysOf,
     getStats,
   }
 }

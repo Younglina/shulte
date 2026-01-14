@@ -6,21 +6,41 @@
     </div>
 
     <div class="history-content">
-      <HistoryList :records="historyList" @clear="clearHistory" />
+      <HistoryList
+        :records="historyList"
+        @clear="clearHistory"
+        @replay="handleReplay"
+      />
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { computed } from 'vue'
+import { useRouter } from 'vue-router'
 import { useLocalStorage } from '../composables/useLocalStorage'
 import HistoryList from '../components/HistoryList.vue'
 
+const router = useRouter()
 const { clearHistory, getHistory } = useLocalStorage()
 
 const historyList = computed(() => getHistory())
 
+const handleReplay = (record) => {
+  // 保存 replay 信息到 sessionStorage
+  const replayData = {
+    gridNumbers: record.gridNumbers,
+    mode: record.mode,
+    modeDisplay: record.modeDisplay,
+    isTimed: record.isTimed,
+    isUnlimited: record.isUnlimited,
+    replayOf: record.id,
+  }
+  sessionStorage.setItem('replayRecord', JSON.stringify(replayData))
 
+  // 跳转到训练页面
+  router.push('/training?replay=true')
+}
 </script>
 
 <style scoped lang="scss">

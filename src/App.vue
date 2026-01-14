@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <div class="background-effects" :class="{ 'hide-particles': isTrainingPage }">
+    <div class="background-effects" v-show="!isPlaying">
       <div class="grid-pattern absolute inset-0"></div>
       <div class="radial-gradient absolute inset-0"></div>
       <div class="particles-container"></div>
@@ -19,20 +19,14 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+import { onMounted, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import Navigation from './components/Navigation.vue'
-
+import { useGameLogic } from './composables/useGameLogic'
 const route = useRoute()
-
-const isTrainingPage = computed(() => {
-  return route.path === '/training'
-})
-
+const { isPlaying } = useGameLogic()
 onMounted(() => {
-  if (!isTrainingPage.value) {
-    createParticles()
-  }
+  createParticles()
 })
 
 const createParticles = () => {
