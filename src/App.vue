@@ -19,11 +19,9 @@
 </template>
 
 <script setup>
-import { onMounted, computed } from 'vue'
-import { useRoute } from 'vue-router'
+import { onMounted } from 'vue'
 import Navigation from './components/Navigation.vue'
 import { useGameLogic } from './composables/useGameLogic'
-const route = useRoute()
 const { isPlaying } = useGameLogic()
 onMounted(() => {
   createParticles()

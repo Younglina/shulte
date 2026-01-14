@@ -11,14 +11,15 @@ import HistoryPage from './pages/HistoryPage.vue'
 import StatsPage from './pages/StatsPage.vue'
 
 const routes = [
-  { path: '/', redirect: '/training' },
-  { path: '/training', component: TrainingPage },
-  { path: '/result', component: ResultPage },
-  { path: '/history', component: HistoryPage },
-  { path: '/stats', component: StatsPage },
+  { path: '/shulte', redirect: '/shulte/training' },
+  { path: '/shulte/training', component: TrainingPage },
+  { path: '/shulte/result', component: ResultPage },
+  { path: '/shulte/history', component: HistoryPage },
+  { path: '/shulte/stats', component: StatsPage },
 ]
 
 const router = createRouter({
+  base: '/shulte',
   history: createWebHistory(),
   routes,
 })

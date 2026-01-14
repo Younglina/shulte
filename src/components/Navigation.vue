@@ -23,9 +23,9 @@ import { useRoute } from 'vue-router'
 const route = useRoute()
 
 const navItems = [
-  { path: '/training', icon: 'mdi-bullseye', label: '训练' },
-  { path: '/history', icon: 'mdi-chart-bar', label: '记录' },
-  { path: '/stats', icon: 'mdi-chart-line', label: '统计' },
+  { path: '/shulte/training', icon: 'mdi-bullseye', label: '训练' },
+  { path: '/shulte/history', icon: 'mdi-chart-bar', label: '记录' },
+  { path: '/shulte/stats', icon: 'mdi-chart-line', label: '统计' },
 ]
 
 const isActive = (path) => {
