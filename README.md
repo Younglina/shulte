@@ -2,7 +2,7 @@
 
 较为标准的舒尔特表专注力训练应用，采用太空科技主题，提供沉浸式训练体验。
 
-在线体验：https://younglina.wang/shulte/training
+在线体验：https://younglina.wang/shulte
 
 ## 核心功能
 

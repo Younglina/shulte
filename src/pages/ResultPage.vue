@@ -29,12 +29,12 @@ onMounted(() => {
     record.value = JSON.parse(savedRecord)
     sessionStorage.removeItem('lastResult')
   } else {
-    router.push('/shulte/training')
+    router.push('/shulte')
   }
 })
 
 const handleBack = () => {
-  router.push('/shulte/training')
+  router.push('/shulte')
 }
 </script>
 
