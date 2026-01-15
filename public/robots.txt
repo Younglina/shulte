@@ -1,0 +1,17 @@
+User-agent: *
+Allow: /
+
+# Disallow private paths
+Disallow: /src/
+Disallow: /node_modules/
+Disallow: /.git/
+Disallow: /dist/
+Disallow: /shulte/
+
+# Disallow development files
+Disallow: /*.log$
+Disallow: /*.map$
+Disallow: /*.tmp
+
+# Sitemap
+Sitemap: https://younglina.wang/shulte/sitemap.xml

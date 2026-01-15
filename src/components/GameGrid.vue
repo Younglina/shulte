@@ -95,12 +95,5 @@ const handleCellClick = (number) => {
     padding: 0;
     border-width: 1.5px;
   }
-
-  .grid-cell {
-    width: 34px;
-    height: 34px;
-    font-size: 14px;
-    border-width: 0.5px;
-  }
 }
 </style>
